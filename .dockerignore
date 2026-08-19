@@ -2,3 +2,12 @@
 !app/
 !data/
 !requirements.txt
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/vite.config.js
+!frontend/src/
+!frontend/public/
+!Dockerfile
+frontend/node_modules/
