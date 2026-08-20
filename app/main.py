@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 import time
@@ -78,11 +80,6 @@ class HealthResponse(BaseModel):
 # --- Routes ---
 
 
-@app.get("/", response_model=None)
-def root():
-    return {"message": "News Recommendation API", "status": "running"}
-
-
 @app.get("/health", response_model=HealthResponse)
 def health():
     if load_error:
@@ -122,3 +119,18 @@ def recommend(request: RecommendationRequest):
         recommendations=[ArticleResult(**r) for r in results],
         latency_ms=round(latency_ms, 2),
     )
+
+
+# --- Static frontend ---
+
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+
+if os.path.isdir(FRONTEND_DIR):
+    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="static")
+
+    @app.get("/{full_path:path}", response_model=None)
+    async def serve_spa(full_path: str):
+        file_path = os.path.join(FRONTEND_DIR, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
