@@ -139,7 +139,7 @@ function App() {
       <main className="main">
         <section className="hero">
           <h2 className="hero-title">
-            Discover articles you'll actually want to read.
+            Discover articles you'll want to read.
           </h2>
           <p className="hero-sub">
             Type a topic, and our embedding model finds the most semantically similar articles from a database of 209,526 news stories.
